@@ -5,12 +5,12 @@
   import PokemonList from '../../components/PokemonList/PokemonList.vue';
 
   const offset = ref(0);
-  const limit = 20;
+  const limit = 12;
   const evaluating = ref(false);
 
   const pokemons = computedAsync(
     async () => {
-      return await fetchPokemon(offset.value);
+      return await fetchPokemon(offset.value, limit);
     },
     { count: 0, next: null, previous: null, results: [] },
     evaluating
@@ -30,9 +30,51 @@
 </script>
 
 <template>
-  <PokemonList v-if="!evaluating" :pokemons="pokemonData" />
-  <button @click="onPrevious" :disabled="isPreviousDisabled">PREV</button>
-  <button @click="onNext" :disabled="isNextDisabled">NEXT</button>
+  <div class="home">
+    <button @click="onPrevious" :disabled="isPreviousDisabled">
+      &blacktriangleleft;
+    </button>
+    <PokemonList :pokemons="pokemonData" :is-loading="evaluating" />
+    <button @click="onNext" :disabled="isNextDisabled">
+      &blacktriangleright;
+    </button>
+  </div>
 </template>
 
-<style></style>
+<style>
+  .home {
+    display: flex;
+    align-items: center;
+    margin: 0 100px 0 100px;
+  }
+  button {
+    background-color: crimson;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    height: 3.5rem;
+    width: 5rem;
+    transition: all 1s;
+  }
+
+  button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+
+  button:disabled:hover {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+
+  button:hover {
+    background-color: darkred;
+  }
+</style>

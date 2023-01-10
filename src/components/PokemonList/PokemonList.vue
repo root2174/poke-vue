@@ -4,6 +4,7 @@
 
   defineProps<{
     pokemons: Pokemon[] | null;
+    isLoading: boolean;
   }>();
 </script>
 
@@ -21,5 +22,9 @@
   .pokemon-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    max-width: fit-content;
+    row-gap: 2rem;
+    column-gap: 14rem;
+    margin: 3rem auto;
   }
 </style>
