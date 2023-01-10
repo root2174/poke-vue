@@ -78,4 +78,11 @@
     column-gap: 5rem;
     grid-template-columns: repeat(2, 1fr);
   }
+
+  @media screen and (max-width: 750px) {
+    .container {
+      box-shadow: none;
+      border-radius: none;
+    }
+  }
 </style>

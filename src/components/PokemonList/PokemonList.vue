@@ -11,6 +11,7 @@
 <template>
   <div class="pokemon-container">
     <PokemonCard
+      v-if="!isLoading"
       v-for="pokemon in pokemons"
       :key="pokemon.name"
       :pokemon="pokemon"
@@ -21,9 +22,9 @@
 <style>
   .pokemon-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     row-gap: 2rem;
-    column-gap: 14rem;
+    column-gap: 4rem;
     margin: 3rem auto;
   }
 

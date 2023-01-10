@@ -5,7 +5,7 @@
   import PokemonList from '../../components/PokemonList/PokemonList.vue';
 
   const offset = ref(0);
-  const limit = 12;
+  const limit = 16;
   const evaluating = ref(false);
 
   const pokemons = computedAsync(
@@ -31,11 +31,15 @@
 
 <template>
   <div class="home">
-    <button @click="onPrevious" :disabled="isPreviousDisabled">
+    <button
+      class="prevButton"
+      @click="onPrevious"
+      :disabled="isPreviousDisabled"
+    >
       &blacktriangleleft;
     </button>
     <PokemonList :pokemons="pokemonData" :is-loading="evaluating" />
-    <button @click="onNext" :disabled="isNextDisabled">
+    <button class="nextButton" @click="onNext" :disabled="isNextDisabled">
       &blacktriangleright;
     </button>
   </div>
@@ -76,5 +80,22 @@
 
   button:hover {
     background-color: darkred;
+  }
+
+  @media screen and (max-width: 875px) {
+    .home {
+      display: flex;
+      flex-direction: column;
+      margin: 0 0 1rem 0;
+    }
+
+    .prevButton {
+      order: 3;
+      margin-bottom: 1rem;
+    }
+
+    .nextButton {
+      order: 4;
+    }
   }
 </style>
