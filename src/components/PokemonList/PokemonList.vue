@@ -22,9 +22,20 @@
   .pokemon-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    max-width: fit-content;
     row-gap: 2rem;
     column-gap: 14rem;
     margin: 3rem auto;
+  }
+
+  @media screen and (max-width: 1290px) {
+    .pokemon-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 875px) {
+    .pokemon-container {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 </style>

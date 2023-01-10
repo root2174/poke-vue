@@ -45,7 +45,7 @@
   .home {
     display: flex;
     align-items: center;
-    margin: 0 100px 0 100px;
+    margin: 0 5rem 0 5rem;
   }
   button {
     background-color: crimson;

@@ -1,17 +1,20 @@
 <script setup lang="ts"></script>
 
 <template>
-  <header>Pokemon List</header>
+  <header>
+    <router-link to="/">
+      <img src="../../assets/logo.svg" />
+    </router-link>
+  </header>
 </template>
 
 <style scoped>
   header {
-    height: 3rem;
+    height: 8rem;
     display: flex;
     align-content: center;
     align-items: center;
     justify-content: center;
-    background-color: crimson;
     width: 100%;
   }
 </style>
