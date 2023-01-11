@@ -3,6 +3,7 @@
   import { useRouter } from 'vue-router';
   import { Pokemon } from '../../interfaces/Pokemon';
   import { fetchPokemonDetailsByUrl } from '../../services/pokemon';
+  import VueLoadImage from 'vue-load-image';
 
   const props = defineProps<{
     pokemon: Pokemon;
@@ -20,12 +21,14 @@
   }
 
   const errorFetching = ref(false);
+  const isLoading = ref(true);
 
   onBeforeMount(async () => {
     try {
       const data = await fetchPokemonDetailsByUrl(props.pokemon.url);
       pokemonData.imgUrl = data.sprites.front_default;
       pokemonData.id = data.id;
+      isLoading.value = false;
     } catch (ex) {
       errorFetching.value = true;
     }
@@ -36,9 +39,17 @@
   <div
     class="pokemon-card"
     @click="redirectToDetailsPage"
-    v-if="!errorFetching"
+    v-if="!errorFetching && !isLoading"
   >
-    <img :src="pokemonData.imgUrl" />
+    <vue-load-image>
+      <template v-slot:image>
+        <img :src="pokemonData.imgUrl" />
+      </template>
+      <template v-slot:preloader>
+        <img src="../../assets/spinner.gif" class="spinner" />
+      </template>
+      <template v-slot:error>Image load fails</template>
+    </vue-load-image>
     <div>
       {{ pokemon.name }}
     </div>
@@ -58,5 +69,10 @@
     min-width: 200px;
 
     cursor: pointer;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
   }
 </style>

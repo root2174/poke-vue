@@ -17,6 +17,7 @@
     "@vueuse/core": "^9.10.0",
     "axios": "^1.2.2",
     "vue": "^3.2.45",
+    "vue-load-image": "^1.1.0",
     "vue-router": "4"
   },
   "devDependencies": {
