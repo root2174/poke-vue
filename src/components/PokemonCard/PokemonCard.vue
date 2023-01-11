@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onBeforeMount, reactive } from 'vue';
+  import { onBeforeMount, reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { Pokemon } from '../../interfaces/Pokemon';
   import { fetchPokemonDetailsByUrl } from '../../services/pokemon';
@@ -19,23 +19,31 @@
     router.push(`pokemon/${pokemonData.id}`);
   }
 
+  const errorFetching = ref(false);
+
   onBeforeMount(async () => {
-    const data = await fetchPokemonDetailsByUrl(props.pokemon.url);
-    if (!data) {
-      return;
+    try {
+      const data = await fetchPokemonDetailsByUrl(props.pokemon.url);
+      pokemonData.imgUrl = data.sprites.front_default;
+      pokemonData.id = data.id;
+    } catch (ex) {
+      errorFetching.value = true;
     }
-    pokemonData.imgUrl = data.sprites.front_default;
-    pokemonData.id = data.id;
   });
 </script>
 
 <template>
-  <div class="pokemon-card" @click="redirectToDetailsPage">
+  <div
+    class="pokemon-card"
+    @click="redirectToDetailsPage"
+    v-if="!errorFetching"
+  >
     <img :src="pokemonData.imgUrl" />
     <div>
       {{ pokemon.name }}
     </div>
   </div>
+  <div v-else>Try again later...</div>
 </template>
 
 <style>

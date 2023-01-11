@@ -3,6 +3,7 @@
   import { fetchPokemon, FetchPokemonData } from '../../services/pokemon';
   import PokemonList from '../../components/PokemonList/PokemonList.vue';
   import { Pokemon } from '../../interfaces/Pokemon';
+  import Spinner from '../../components/Spinner/Spinner.vue';
 
   const initialPokemonLoad = 16;
 
@@ -14,9 +15,15 @@
   const pokemons = ref<FetchPokemonData>();
   const visiblePokemons = ref<Pokemon[]>();
 
+  const errorFetching = ref(false);
+
   onBeforeMount(async () => {
-    pokemons.value = await fetchPokemon();
-    evaluating.value = false;
+    try {
+      pokemons.value = await fetchPokemon();
+      evaluating.value = false;
+    } catch (ex) {
+      errorFetching.value = true;
+    }
   });
 
   watch([pokemons, numPokemonsVisible, searchedPokemon], () => {
@@ -59,7 +66,11 @@
       <input v-model="searchedPokemon" />
       <button @click="search">Search</button>
     </div>
-    <PokemonList :pokemons="visiblePokemons" v-if="!evaluating" />
+    <div>
+      <PokemonList :pokemons="visiblePokemons" v-if="!evaluating" />
+      <Spinner v-else />
+      <div v-if="errorFetching">Try again Later...</div>
+    </div>
     <button @click="loadMore" :disabled="Boolean(searchedPokemon)">
       Load More...
     </button>
