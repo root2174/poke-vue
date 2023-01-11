@@ -23,7 +23,7 @@
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" v-if="pokemonDetails">
     <img :src="pokemonDetails?.sprites.front_default" />
     <div><b>Name:</b> {{ pokemonDetails?.name }}</div>
     <div class="info">

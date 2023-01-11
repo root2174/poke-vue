@@ -1,10 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
+
+  const goToHome = () => {
+    router.push('/');
+  };
+</script>
 
 <template>
   <header>
-    <router-link to="/">
-      <img src="../../assets/logo.svg" />
-    </router-link>
+    <img @click="goToHome" src="../../assets/logo.svg" class="logo" />
   </header>
 </template>
 
