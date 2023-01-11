@@ -1,46 +1,67 @@
 <script setup lang="ts">
-  import { computed, ref } from 'vue';
-  import { fetchPokemon } from '../../services/pokemon';
-  import { computedAsync } from '@vueuse/core';
+  import { ref, watch, onBeforeMount } from 'vue';
+  import { fetchPokemon, FetchPokemonData } from '../../services/pokemon';
   import PokemonList from '../../components/PokemonList/PokemonList.vue';
+  import { Pokemon } from '../../interfaces/Pokemon';
 
-  const offset = ref(0);
-  const limit = 16;
-  const evaluating = ref(false);
+  const initialPokemonLoad = 16;
 
-  const pokemons = computedAsync(
-    async () => {
-      return await fetchPokemon(offset.value, limit);
-    },
-    { count: 0, next: null, previous: null, results: [] },
-    evaluating
-  );
+  const evaluating = ref(true);
+  const numPokemonsVisible = ref(initialPokemonLoad);
 
-  const pokemonData = computed(() => pokemons.value.results);
-  const isPreviousDisabled = computed(() => pokemons.value.previous === null);
-  const isNextDisabled = computed(() => pokemons.value.next === null);
+  const searchedPokemon = ref('');
 
-  function onPrevious() {
-    offset.value -= limit;
-  }
+  const pokemons = ref<FetchPokemonData>();
+  const visiblePokemons = ref<Pokemon[]>();
 
-  function onNext() {
-    offset.value += limit;
-  }
+  onBeforeMount(async () => {
+    pokemons.value = await fetchPokemon();
+    evaluating.value = false;
+  });
+
+  watch([pokemons, numPokemonsVisible, searchedPokemon], () => {
+    if (!searchedPokemon.value) {
+      visiblePokemons.value = pokemons.value?.results.slice(
+        0,
+        numPokemonsVisible.value
+      );
+
+      return;
+    }
+  });
+
+  const search = () => {
+    if (!searchedPokemon.value) {
+      return;
+    }
+
+    const filteredPokemon = filterPokemonByName();
+
+    if (filteredPokemon && filteredPokemon.length > 0) {
+      visiblePokemons.value = filteredPokemon;
+    }
+  };
+
+  const filterPokemonByName = () => {
+    return pokemons.value?.results.filter((pokemon) => {
+      return pokemon.name.includes(searchedPokemon.value);
+    });
+  };
+
+  const loadMore = () => {
+    numPokemonsVisible.value += initialPokemonLoad;
+  };
 </script>
 
 <template>
   <div class="home">
-    <button
-      class="prevButton"
-      @click="onPrevious"
-      :disabled="isPreviousDisabled"
-    >
-      &blacktriangleleft;
-    </button>
-    <PokemonList :pokemons="pokemonData" :is-loading="evaluating" />
-    <button class="nextButton" @click="onNext" :disabled="isNextDisabled">
-      &blacktriangleright;
+    <div class="search">
+      <input v-model="searchedPokemon" />
+      <button @click="search">Search</button>
+    </div>
+    <PokemonList :pokemons="visiblePokemons" v-if="!evaluating" />
+    <button @click="loadMore" :disabled="Boolean(searchedPokemon)">
+      Load More...
     </button>
   </div>
 </template>
@@ -48,38 +69,38 @@
 <style>
   .home {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin: 0 5rem 0 5rem;
+    margin: 0 5rem 2rem 5rem;
   }
+
+  .search input {
+    margin-top: 2rem;
+    margin-right: 0.5rem;
+  }
+
   button {
+    cursor: pointer;
+    padding: 8px 15px;
+    color: white;
     background-color: crimson;
-    color: #fff;
     border: none;
     border-radius: 4px;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
-    height: 3.5rem;
-    width: 5rem;
     transition: all 1s;
   }
 
+  button:hover {
+    background-color: darkred;
+  }
   button:disabled {
     background-color: gray;
     cursor: not-allowed;
   }
 
-  button:disabled:hover {
-    background-color: gray;
-    cursor: not-allowed;
-  }
-
-  button:hover {
-    background-color: darkred;
+  input {
+    padding: 6px;
+    width: 200px;
+    border-radius: 4px;
   }
 
   @media screen and (max-width: 875px) {
@@ -87,15 +108,6 @@
       display: flex;
       flex-direction: column;
       margin: 0 0 1rem 0;
-    }
-
-    .prevButton {
-      order: 3;
-      margin-bottom: 1rem;
-    }
-
-    .nextButton {
-      order: 4;
     }
   }
 </style>

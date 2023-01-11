@@ -37,7 +37,10 @@ export interface FetchPokemonDetails {
   id: number;
 }
 
-export async function fetchPokemon(offset: number, limit: number = 20) {
+export async function fetchPokemon(
+  offset: number = 0,
+  limit: number = 1000000
+) {
   const res = await api.get<FetchPokemonData>(
     `/pokemon?offset=${offset}&limit=${limit}`
   );

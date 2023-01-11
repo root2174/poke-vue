@@ -3,15 +3,13 @@
   import PokemonCard from '../PokemonCard/PokemonCard.vue';
 
   defineProps<{
-    pokemons: Pokemon[] | null;
-    isLoading: boolean;
+    pokemons: Pokemon[] | undefined;
   }>();
 </script>
 
 <template>
   <div class="pokemon-container">
     <PokemonCard
-      v-if="!isLoading"
       v-for="pokemon in pokemons"
       :key="pokemon.name"
       :pokemon="pokemon"
@@ -34,7 +32,7 @@
     }
   }
 
-  @media screen and (max-width: 875px) {
+  @media screen and (max-width: 500px) {
     .pokemon-container {
       grid-template-columns: repeat(1, 1fr);
     }
