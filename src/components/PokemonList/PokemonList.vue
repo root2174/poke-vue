@@ -23,10 +23,16 @@
     grid-template-columns: repeat(4, 1fr);
     row-gap: 2rem;
     column-gap: 4rem;
-    margin: 3rem auto;
+    margin: 2rem auto;
   }
 
   @media screen and (max-width: 1290px) {
+    .pokemon-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 760px) {
     .pokemon-container {
       grid-template-columns: repeat(2, 1fr);
     }

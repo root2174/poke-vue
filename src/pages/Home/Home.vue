@@ -71,7 +71,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 5rem 2rem 5rem;
+    margin: 0 5rem 1rem 5rem;
   }
 
   .search input {
